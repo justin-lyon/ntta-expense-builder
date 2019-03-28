@@ -29,13 +29,14 @@
 
     <v-snackbar
       v-model="snackbar"
-      :timeout="snacktime">
+      :timeout="snacktime"
+      color="error">
 
       {{ message }}
 
       <v-btn fab small
         @click="snackbar = false">
-        <v-icon small color="orange">close</v-icon>
+        <v-icon small >close</v-icon>
       </v-btn>
     </v-snackbar>
   </div>
