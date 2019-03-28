@@ -26,6 +26,18 @@
           :key="file.name + file.size + i"></app-file-item>
       </template>
     </v-list>
+
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="snacktime">
+
+      {{ message }}
+
+      <v-btn fab small
+        @click="snackbar = false">
+        <v-icon small color="orange">close</v-icon>
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -37,7 +49,10 @@ export default {
     return {
       inputId: null,
       dropzoneId: null,
-      files: null
+      files: null,
+      snackbar: false,
+      snackTime: 6000,
+      message: 'Error!'
     }
   },
 
@@ -112,12 +127,14 @@ export default {
         console.log('items', items)
 
         if (items.length > 1) {
-          throw new Error('Too many files.')
+          this.firePageMessage('Too many files!')
+          return
         }
 
         const files = Array.from(items).map(item => {
           if (item.kind !== 'file') {
-            throw new Error('This is not a file.', item)
+            this.firePageMessage('That is not a file!')
+            return
           }
 
           const file = item.getAsFile()
@@ -132,13 +149,19 @@ export default {
         console.log('files', files)
 
         if (files.length > 1) {
-          throw new Error('Too many Files.')
+          this.firePageMessage('Too many files!')
+          return
         }
 
         Array.from(files).forEach(file => {
           console.log('file', file.name)
         })
       }
+    },
+
+    firePageMessage (message) {
+      this.snackbar = true
+      this.message = message
     }
   },
 

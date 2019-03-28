@@ -26,11 +26,6 @@
           </div>
         </v-card>
       </v-flex>
-      <v-flex xs12 >
-        <v-card>
-          <v-card-title>content2</v-card-title>
-        </v-card>
-      </v-flex>
     </v-layout>
   </v-container>
 </template>
