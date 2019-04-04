@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div :id="dropzoneId"
+    <div
+      ref="dropzone"
       class="dropzone"
       @dragenter="dragOn"
       @dragover="dragOn"
@@ -12,7 +13,8 @@
       <v-icon class="icon-size"
         color="orange" >cloud_upload</v-icon>
     </div>
-    <input :id="inputId"
+    <input
+      ref="fileInput"
       name="fileUploader"
       type="file"
       @change="fileChanged"
@@ -29,7 +31,7 @@
 
     <v-snackbar
       v-model="snackbar"
-      :timeout="snacktime"
+      :timeout="snackTime"
       color="error">
 
       {{ message }}
@@ -48,8 +50,6 @@ import AppFileItem from './fileItem'
 export default {
   data () {
     return {
-      inputId: null,
-      dropzoneId: null,
       files: null,
       snackbar: false,
       snackTime: 6000,
@@ -57,70 +57,72 @@ export default {
     }
   },
 
-  mounted () {
-    this.inputId = this._uid + '_fileInput'
-    this.dropzoneId = this._uid + '_dropzone'
-  },
-
   methods: {
-    getFileInput () {
-      return document.getElementById(this.inputId)
-    },
-
     clickUpload () {
-      const el = this.getFileInput()
+      const el = this.$refs.fileInput
       el.click()
     },
 
     fileChanged (event) {
-      const files = this.getFileInput().files
+      const files = this.$refs.fileInput.files
       this.files = files
-      console.log('file', this.files)
+      const file = this.files[0]
 
-      this.readFile(this.files[0])
+      this.readFile(file)
+        .then(content => {
+          this.$emit('fileRead', { file, content })
+        })
+        .catch(err => {
+          console.error('Unhandled Error', err)
+        })
     },
 
     setFiles (files) {
-      const fileInput = this.getFileInput()
+      const fileInput = this.$refs.fileInput
       this.files = files
     },
 
     clearFiles () {
       this.files = null
 
-      const input = document.getElementById(this.inputId)
+      const input = this.$refs.fileInput
       input.value = null
       input.files = null
     },
 
     readFile (file) {
-      const reader = new FileReader()
-      reader.onload = event => {
-        console.log('data', event.target.result)
-      }
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = event => {
+          return resolve(event.target.result)
+        }
 
-      reader.readAsText(file)
-    },
+        reader.onerror = event => {
+          reader.abort()
+          return reject(event)
+        }
 
-    getDropzone () {
-      return document.getElementById(this.dropzoneId)
+        if (file) {
+          reader.readAsText(file)
+        }
+      })
     },
 
     dragOn (event) {
       event.preventDefault()
-      const dropzone = this.getDropzone()
+      const dropzone = this.$refs.dropzone
       dropzone.classList.add('active')
     },
 
     dragOff (event) {
       event.preventDefault()
-      const dropzone = this.getDropzone()
+      const dropzone = this.$refs.dropzone
       dropzone.classList.remove('active')
     },
 
     drop (event) {
       event.preventDefault()
-      const dropzone = this.getDropzone()
+      const dropzone = this.$refs.dropzone
       dropzone.classList.remove('active')
 
       if (event.dataTransfer.items) {

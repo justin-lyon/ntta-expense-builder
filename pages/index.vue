@@ -22,7 +22,8 @@
         <v-card>
           <v-card-title>Upload</v-card-title>
           <div class="text-xs-center">
-            <app-file-upload></app-file-upload>
+            <app-file-upload
+              @fileRead="handleFileRead"></app-file-upload>
           </div>
         </v-card>
       </v-flex>
@@ -33,6 +34,39 @@
 <script>
 import AppFileUpload from '../components/fileUpload'
 export default {
+  data () {
+    return {
+      file: null,
+      content: null
+    }
+  },
+
+  methods: {
+    handleFileRead (event) {
+      console.log('message', event.file)
+      const { file, content } = event
+      this.file = file
+      this.content = content
+
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const axiosConfig = {
+        headers: {
+          'Content-Type': 'multipart/form/data'
+        }
+      }
+
+      this.$axios.post('/upload', formData, axiosConfig)
+        .then(res => {
+          console.log('success', res.data)
+        })
+        .catch(err => {
+          console.error('Error uploading...', err.message)
+        })
+    }
+  },
+
   components: {
     AppFileUpload
   }
