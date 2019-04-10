@@ -32,8 +32,11 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import AppFileUpload from '../components/fileUpload'
+
 export default {
+  name: 'home',
   data () {
     return {
       file: null,
@@ -42,6 +45,10 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      setTransactions: 'transactions/setTransactions'
+    }),
+
     handleFileRead (event) {
       console.log('message', event.file)
       const { file, content } = event
@@ -60,6 +67,8 @@ export default {
       this.$axios.post('/upload', formData, axiosConfig)
         .then(res => {
           console.log('success', res.data)
+          this.setTransactions(res.data)
+          this.$router.push('/transactions')
         })
         .catch(err => {
           console.error('Error uploading...', err.message)

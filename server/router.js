@@ -5,10 +5,8 @@ const uploadSingle = multer().single('file')
 const { readFile } = require('./tsv2json')
 
 router.post('/upload', uploadSingle, (req, res) => {
-  console.log('received', req.file)
   readFile(req.file.buffer)
     .then(data => {
-      console.log('file data', data)
       res.send(data)
     })
     .catch(err => {

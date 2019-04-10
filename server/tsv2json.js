@@ -4,7 +4,6 @@ const readFile = bufferContent => {
       const stringContent = bufferContent.toString('utf8')
       const rows = stringContent.split('\n')
       const headers = rows.shift().split('\t')
-      const firstRow = rows[1].split('\t')
 
       const data = rows.reduce((acc, rowString) => {
         const row = rowString.split('\t')
@@ -18,7 +17,6 @@ const readFile = bufferContent => {
         return acc.concat(rowData)
       }, [])
 
-      console.log('headers', headers)
       resolve({ data })
 
     } catch(err) {
