@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { format } from 'date-fns'
 export default {
   name: 'transactionRow',
 
@@ -14,8 +15,8 @@ export default {
 
   computed: {
     postedDate () {
-      const format = 'MM/DD/YYYY hh:mm A'
-      return this.$moment.unix(this.item.postedDate).format(format)
+      const formatTemplate = 'MM/DD/YYYY hh:mm A'
+      return format(this.item.postedDate, formatTemplate)
     }
   }
 }

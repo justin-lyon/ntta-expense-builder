@@ -1,5 +1,6 @@
-const moment = require('moment')
-const format = 'MM/DD/YYYY HH:mm:ss'
+const { getTime, parse, format } = require('date-fns')
+const formatString = 'MM/DD/YYYY HH:mm:ss'
+const datePattern = /([0-9]{2}\/){2}([0-9]{4}\s){1}([0-9]{2}\:){2}[0-9]{2}/
 
 const camelize = label => {
   return label.split(/\s|\//)
@@ -37,8 +38,8 @@ const readFile = bufferContent => {
 
           if (row[i]) {
             const prop = row[i]
-            if (moment(prop, format, true).isValid()) {
-              rowData[columnName] = moment(prop, format, true).unix()
+            if (datePattern.test(prop)) {
+              rowData[columnName] = getTime(parse(prop))
             } else {
               rowData[columnName] = prop.trim()
             }
