@@ -1,11 +1,17 @@
 <template>
   <div>
-    transactions.vue
+    <app-transaction-table></app-transaction-table>
   </div>
 </template>
 
 <script>
+import AppTransactionTable from '../components/transactionTable'
+
 export default {
-  name: 'transactions'
+  name: 'transactions',
+
+  components: {
+    AppTransactionTable
+  }
 }
 </script>

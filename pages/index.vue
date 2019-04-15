@@ -45,8 +45,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setTransactions: 'transactions/setTransactions'
+    ...mapMutations( 'transactions', {
+      setTransactions: 'setTransactions'
     }),
 
     handleFileRead (event) {
