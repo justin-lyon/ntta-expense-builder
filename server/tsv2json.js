@@ -1,5 +1,4 @@
-const { getTime, parse, format } = require('date-fns')
-const formatString = 'MM/DD/YYYY HH:mm:ss'
+const { getTime, parse } = require('date-fns')
 const datePattern = /([0-9]{2}\/){2}([0-9]{4}\s){1}([0-9]{2}\:){2}[0-9]{2}/
 
 const camelize = label => {
